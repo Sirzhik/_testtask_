@@ -1,17 +1,25 @@
 from fastapi import FastAPI, HTTPException
-from try_send import send
 from payloads import SendArgs, RegUserArgs, RegManagerArgs, Auth, ChangePassword, ManagerCheck
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
 from time import asctime
 from permissions import is_admin, is_manager
+from envs import sql_host, sql_password, sql_db_name, sql_user_name, sql_port
+from aiogram import Bot
+
 
 import hashlib
 import json
 
 app = FastAPI()
+engine = create_async_engine(url=f'postgresql+asyncpg://{sql_user_name}:{sql_password}@{sql_host}:{sql_port}/'
+                                 f'{sql_db_name}')
 
-engine = create_async_engine(url='postgresql+asyncpg://postgres:root@localhost:5432/testtask')
+
+async def send(token, chat_id, text: str):
+    bot = Bot(token=token)
+    await bot.send_message(chat_id=chat_id, text=text)
+    await bot.session.close()
 
 
 @app.post('/send/{token}')

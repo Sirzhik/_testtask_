@@ -74,3 +74,28 @@ payload = {
 
 requests.post(url, json=payload)
 ```
+
+/auth - Приймає **username** та **password** у тілі запиту, та повертає **token**
+
+**POST**
+```python
+payload = {
+    'username': "user1",
+    'password': '4444'
+}
+
+requests.post(url, json=payload)
+```
+
+/changepassword/{token} - Зчитує **token** з URL та бере з тіла запиту оновлений пароль, після чого у записі користувача у таблиці users колонка password змінюється. 
+
+
+**POST**
+
+```python
+payload = {
+    'password': '4444'
+}
+
+requests.post(url, json=payload)
+```

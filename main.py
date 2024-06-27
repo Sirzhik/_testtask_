@@ -79,11 +79,11 @@ async def check(manager_token: str, args: ManagerCheck):
 
     try:
         async with engine.connect() as connection:
-            res = await connection.execute(text('SELECT manager FROM groups WHERE id = :id'), {'id': args.user_id})
+            res = await connection.execute(text('SELECT manager FROM groups WHERE subuser = :subuser'), {'subuser': args.user_id})
             manager_id = res.fetchone()[0]
 
             if manager_id == args.manager_id:
-                ret = await connection.execute(text('SELECT * FROM requests WHERE id = :id'), {'id': args.user_id})
+                ret = await connection.execute(text('SELECT * FROM requests WHERE sender = :sender'), {'sender': args.user_id})
                 result = ret.fetchall()
 
                 serialized_result = [
